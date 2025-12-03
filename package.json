@@ -2,11 +2,16 @@
   "name": "secretsanta",
   "private": true,
   "packageManager": "yarn@4.5.1",
+  "engines": {
+    "node": ">=18.0.0",
+    "yarn": "4.5.1"
+  },
   "scripts": {
     "dev": "vite",
-    "start": "vite",
+    "start": "serve -s dist -l $PORT",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "heroku-postbuild": "npm run build"
   },
   "dependencies": {
     "@fontsource/cherry-swash": "^5.1.0",
@@ -24,6 +29,7 @@
     "react-dom": "^18.3.1",
     "react-i18next": "^15.1.1",
     "react-router-dom": "^6.28.0",
+    "serve": "^14.2.4",
     "vitest": "^2.1.5"
   },
   "devDependencies": {
