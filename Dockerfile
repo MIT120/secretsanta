@@ -1,5 +1,4 @@
-# Build stage
-FROM node:20-alpine AS builder
+FROM node:20-alpine
 
 # Install yarn
 RUN corepack enable && corepack prepare yarn@4.5.1 --activate
@@ -10,33 +9,18 @@ WORKDIR /app
 COPY package.json .yarnrc.yml ./
 COPY .yarn ./.yarn
 
-# Install dependencies
+# Install dependencies (including devDependencies for dev server)
 RUN yarn install
 
 # Copy source code
 COPY . .
 
-# Build the application
-RUN yarn build
-
-# Production stage
-FROM node:20-alpine
-
-WORKDIR /app
-
-# Install serve globally
-RUN npm install -g serve
-
-# Copy built files from builder
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/package.json ./package.json
-
-# Expose port (default 3000, can be overridden with PORT env var)
-EXPOSE 3000
+# Expose port (Vite dev server default is 5173, but can be overridden)
+EXPOSE 5173
 
 # Set default PORT if not provided
-ENV PORT=3000
+ENV PORT=5173
 
-# Start the server
-CMD ["sh", "-c", "serve -s dist -l $PORT"]
+# Start the dev server
+CMD ["sh", "-c", "yarn dev --host 0.0.0.0 --port $PORT"]
 
