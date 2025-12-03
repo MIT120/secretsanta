@@ -10,8 +10,7 @@
     "dev": "vite",
     "start": "serve -s dist -l $PORT",
     "build": "vite build",
-    "preview": "vite preview",
-    "heroku-postbuild": "yarn build"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@fontsource/cherry-swash": "^5.1.0",
