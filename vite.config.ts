@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: '0.0.0.0',
-    port: parseInt(process.env.PORT || '5173'),
+    port: 3000,
     allowedHosts: [
       'goldfish-app-69vxw.ondigitalocean.app',
       'localhost',
