@@ -9,6 +9,65 @@ Should you appreciate this tool so much that you'd like to thank me, you can eit
 
 <br/>
 
+## Docker Deployment
+
+### Prerequisites
+- Docker installed on your system
+- Docker Compose (optional, for easier deployment)
+
+### Building and Running with Docker
+
+#### Option 1: Using Docker directly
+
+1. Build the Docker image:
+```bash
+docker build -t secretsanta .
+```
+
+2. Run the container:
+```bash
+docker run -d -p 3000:3000 --name secretsanta-app secretsanta
+```
+
+The application will be available at `http://localhost:3000`
+
+#### Option 2: Using Docker Compose
+
+1. Build and start the container:
+```bash
+docker-compose up -d
+```
+
+2. To view logs:
+```bash
+docker-compose logs -f
+```
+
+3. To stop the container:
+```bash
+docker-compose down
+```
+
+### Custom Port
+
+To run on a different port, set the `PORT` environment variable:
+
+```bash
+docker run -d -p 8080:8080 -e PORT=8080 --name secretsanta-app secretsanta
+```
+
+Or in `docker-compose.yml`, modify the ports and environment sections.
+
+### Production Deployment
+
+For production, you may want to:
+- Use a reverse proxy (nginx, traefik, etc.)
+- Set up SSL/TLS certificates
+- Configure environment variables
+- Use a container orchestration platform (Kubernetes, Docker Swarm, etc.)
+
+<br/>
+
 ## License (MIT)
 
 > **Copyright © 2015 Maël Nison**
