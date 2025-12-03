@@ -30,6 +30,7 @@ export const en = {
     assignment: "Welcome, <name/>! You have been picked to get a gift for:",
     loading: "Loading...",
     error: "Failed to decrypt the message. The link might be invalid.",
+    linkAlreadyOpened: "You have already opened a Secret Santa link. For security reasons, you can only view one assignment per browser.",
     startYourOwn: "Start a Secret Santa!"
   },
   participants: {
@@ -64,6 +65,7 @@ export const en = {
     resetAssignments: "Regenerate Pairings",
     shareInstructions: "Only share those links with their corresponding gift giver",
     exportCSV: "Export as CSV",
+    printPostCards: "Print PostCards",
     copySecretLink: "Copy Secret Link",
     linkCopied: "Added to clipboard!",
     for: "for"

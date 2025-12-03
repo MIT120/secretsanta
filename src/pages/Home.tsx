@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { RulesModal } from '../components/RulesModal';
 import { GeneratedPairs, generatePairs } from '../utils/generatePairs';
 import { Accordion } from '../components/Accordion';
@@ -7,7 +7,7 @@ import { ParticipantsList } from '../components/ParticipantsList';
 import { ParticipantsTextView } from '../components/ParticipantsTextView';
 import { SecretSantaLinks } from '../components/SecretSantaLinks';
 import { Participant, Rule } from '../types';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { PostCard } from '../components/PostCard';
 import { Trans, useTranslation } from 'react-i18next';
 import { MenuItem } from '../components/SideMenu';
@@ -16,6 +16,8 @@ import { Code, Heart, Rows, Star } from '@phosphor-icons/react';
 import { Settings } from '../components/Settings';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { Layout } from '../components/Layout';
+
+const SECRET_SANTA_PAIRING_KEY = 'secretSantaPairing';
 
 function migrateParticipants(value: any) {
   // The first release of the new tool used an array of participants.
@@ -79,6 +81,7 @@ function migrateAssignments(value: any) {
 
 export function Home() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [isTextView, setIsTextView] = useState(false);
 
   const [participants, setParticipants] = useLocalStorage<Record<string, Participant>>('secretSantaParticipants', {}, migrateParticipants);
@@ -88,6 +91,14 @@ export function Home() {
   const [selectedParticipantId, setSelectedParticipantId] = useState<string | null>(null);
   const [isRulesModalOpen, setIsRulesModalOpen] = useState(false);
   const [openSection, setOpenSection] = useState<'participants' | 'links' | 'settings'>('participants');
+
+  // Check if user has already opened a pairing link and redirect them
+  useEffect(() => {
+    const storedPairing = localStorage.getItem(SECRET_SANTA_PAIRING_KEY);
+    if (storedPairing) {
+      navigate('/pairing');
+    }
+  }, [navigate]);
 
   const handleGeneratePairs = () => {
     const assignments = generatePairs(participants);
