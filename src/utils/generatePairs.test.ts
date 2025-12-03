@@ -32,7 +32,7 @@ describe('generatePairs', () => {
       Object.entries(participants).map(([id, participant]) => {
         const rules = participant.rules
           // Remove duplicate rules for the same target
-          .filter((rule, index, self) => 
+          .filter((rule, index, self) =>
             index === self.findIndex(r => r.targetParticipantId === rule.targetParticipantId)
           )
           // Ensure valid IDs
@@ -45,17 +45,17 @@ describe('generatePairs', () => {
 
         // Ensure no more than one MUST rule
         const mustRules = rules.filter(r => r.type === 'must');
-        const validRules = mustRules.length > 1 
+        const validRules = mustRules.length > 1
           ? [mustRules[0], ...rules.filter(r => r.type === 'mustNot')]
           : rules;
 
         // Remove conflicting MUST/MUST NOT rules
         const mustRule = validRules.find(r => r.type === 'must');
         const finalRules = mustRule
-          ? validRules.filter(r => 
-              r.type === 'must' || 
-              r.targetParticipantId !== mustRule.targetParticipantId
-            )
+          ? validRules.filter(r =>
+            r.type === 'must' ||
+            r.targetParticipantId !== mustRule.targetParticipantId
+          )
           : validRules;
 
         return [id, {
@@ -71,42 +71,42 @@ describe('generatePairs', () => {
     fc.assert(
       fc.property(participantsArb, (participants) => {
         const result = generatePairs(participants);
-        
+
         if (result === null) {
           return true; // Null is a valid result
         }
 
         // Properties that must hold for valid pairings:
         expect(result.pairings).toHaveLength(Object.keys(participants).length);
-        
-        const givers = new Set(result.pairings.map(({giver}) => giver.id));
-        const receivers = new Set(result.pairings.map(({receiver}) => receiver.id));
-        
+
+        const givers = new Set(result.pairings.map(({ giver }) => giver.id));
+        const receivers = new Set(result.pairings.map(({ receiver }) => receiver.id));
+
         // Everyone gives exactly once
         expect(givers.size).toBe(Object.keys(participants).length);
         // Everyone receives exactly once
         expect(receivers.size).toBe(Object.keys(participants).length);
-        
+
         // All MUST rules are respected
-        result.pairings.forEach(({giver, receiver}) => {
+        result.pairings.forEach(({ giver, receiver }) => {
           const mustRules = participants[giver.id].rules.filter(r => r.type === 'must');
-          
+
           mustRules.forEach(rule => {
             expect(receiver.id).toBe(rule.targetParticipantId);
           });
         });
 
         // All MUST NOT rules are respected
-        result.pairings.forEach(({giver, receiver}) => {
+        result.pairings.forEach(({ giver, receiver }) => {
           const mustNotRules = participants[giver.id].rules.filter(r => r.type === 'mustNot');
-          
+
           mustNotRules.forEach(rule => {
             expect(receiver.id).not.toBe(rule.targetParticipantId);
           });
         });
 
         // No self-assignments unless required by MUST rule
-        result.pairings.forEach(({giver, receiver}) => {
+        result.pairings.forEach(({ giver, receiver }) => {
           if (giver.id === receiver.id) {
             const selfAssignmentRequired = participants[giver.id].rules.some(
               (r: Rule) => r.type === 'must' && r.targetParticipantId === giver.id
@@ -149,7 +149,7 @@ describe('generatePairs', () => {
     };
 
     const result = generatePairs(participants);
-    expect(result?.pairings.map(({giver, receiver}) => [
+    expect(result?.pairings.map(({ giver, receiver }) => [
       participants[giver.id],
       participants[receiver.id],
     ])).toEqual([
@@ -162,13 +162,13 @@ describe('generatePairs', () => {
   it('should return null for invalid rule configurations', () => {
     // Test multiple MUST rules
     const multiMustParticipants: Record<string, Participant> = {
-      'A': { 
+      'A': {
         id: 'A',
-        name: 'A', 
+        name: 'A',
         rules: [
           { type: 'must', targetParticipantId: 'B' },
           { type: 'must', targetParticipantId: 'C' }
-        ] 
+        ]
       },
       'B': { id: 'B', name: 'B', rules: [] },
       'C': { id: 'C', name: 'C', rules: [] },
@@ -178,13 +178,13 @@ describe('generatePairs', () => {
 
     // Test conflicting MUST/MUST NOT rules
     const conflictingRulesParticipants: Record<string, Participant> = {
-      'A': { 
+      'A': {
         id: 'A',
-        name: 'A', 
+        name: 'A',
         rules: [
           { type: 'must', targetParticipantId: 'B' },
           { type: 'mustNot', targetParticipantId: 'B' }
-        ] 
+        ]
       },
       'B': { id: 'B', name: 'B', rules: [] },
     };
@@ -250,7 +250,7 @@ describe('generatePairs', () => {
       const generationResult = generatePairs(parseOk.participants);
 
       expect(generationResult).not.toBeNull();
-      const {pairings} = generationResult as GeneratedPairs;
+      const { pairings } = generationResult as GeneratedPairs;
 
       // Verify each participant gives and receives exactly once
       const givers = new Set(pairings.map(p => p.giver.id));
@@ -259,22 +259,22 @@ describe('generatePairs', () => {
       expect(receivers.size).toBe(Object.keys(parseOk.participants).length);
 
       // Verify no self-assignments
-      for (const {giver, receiver} of pairings) {
+      for (const { giver, receiver } of pairings) {
         expect(giver.id).not.toBe(receiver.id);
       }
 
       // Verify all MUST NOT rules are respected
-      for (const {giver, receiver} of pairings) {
+      for (const { giver, receiver } of pairings) {
         const participant = parseOk.participants[giver.id];
         const mustNotRules = participant.rules.filter(r => r.type === 'mustNot');
-        
+
         for (const rule of mustNotRules) {
           expect(receiver.id).not.toBe(rule.targetParticipantId);
         }
       }
 
       // Verify all MUST rules are respected
-      for (const {giver, receiver} of pairings) {
+      for (const { giver, receiver } of pairings) {
         const participant = parseOk.participants[giver.id];
         const mustRules = participant.rules.filter(r => r.type === 'must');
 
