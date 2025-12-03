@@ -22,5 +22,5 @@ EXPOSE 5173
 ENV PORT=5173
 
 # Start the dev server
-CMD ["sh", "-c", "yarn dev --host 0.0.0.0 --port $PORT"]
+CMD ["sh", "-c", "npm run dev"]
 
