@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { RulesModal } from '../components/RulesModal';
 import { GeneratedPairs, generatePairs } from '../utils/generatePairs';
 import { Accordion } from '../components/Accordion';
@@ -7,7 +7,7 @@ import { ParticipantsList } from '../components/ParticipantsList';
 import { ParticipantsTextView } from '../components/ParticipantsTextView';
 import { SecretSantaLinks } from '../components/SecretSantaLinks';
 import { Participant, Rule } from '../types';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { PostCard } from '../components/PostCard';
 import { Trans, useTranslation } from 'react-i18next';
 import { MenuItem } from '../components/SideMenu';
@@ -16,6 +16,8 @@ import { Code, Heart, Rows, Star } from '@phosphor-icons/react';
 import { Settings } from '../components/Settings';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { Layout } from '../components/Layout';
+
+const SECRET_SANTA_PAIRING_KEY = 'secretSantaPairing';
 
 function migrateParticipants(value: any) {
   // The first release of the new tool used an array of participants.
@@ -34,9 +36,9 @@ function migrateParticipants(value: any) {
       migrated[id] = {
         id,
         name: participant.name,
-        rules: participant.rules.map(({type, targetParticipant}: {type: string, targetParticipant: string}) => {
+        rules: participant.rules.map(({ type, targetParticipant }: { type: string, targetParticipant: string }) => {
           const targetParticipantId = ids.get(targetParticipant);
-          return targetParticipantId ? {type, targetParticipantId} : null;
+          return targetParticipantId ? { type, targetParticipantId } : null;
         }).filter((rule: any): rule is Rule => {
           return !!rule;
         }),
@@ -60,16 +62,16 @@ function migrateAssignments(value: any) {
     console.log({
       hash: ``,
       pairings: value.map(([giver, receiver]) => ({
-        giver: {id: ``, name: giver},
-        receiver: {id: ``, name: receiver},
+        giver: { id: ``, name: giver },
+        receiver: { id: ``, name: receiver },
       })),
     });
 
     return {
       hash: ``,
       pairings: value.map(([giver, receiver]) => ({
-        giver: {id: ``, name: giver},
-        receiver: {id: ``, name: receiver},
+        giver: { id: ``, name: giver },
+        receiver: { id: ``, name: receiver },
       })),
     };
   }
@@ -79,6 +81,7 @@ function migrateAssignments(value: any) {
 
 export function Home() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [isTextView, setIsTextView] = useState(false);
 
   const [participants, setParticipants] = useLocalStorage<Record<string, Participant>>('secretSantaParticipants', {}, migrateParticipants);
@@ -89,10 +92,18 @@ export function Home() {
   const [isRulesModalOpen, setIsRulesModalOpen] = useState(false);
   const [openSection, setOpenSection] = useState<'participants' | 'links' | 'settings'>('participants');
 
+  // Check if user has already opened a pairing link and redirect them
+  useEffect(() => {
+    const storedPairing = localStorage.getItem(SECRET_SANTA_PAIRING_KEY);
+    if (storedPairing) {
+      navigate('/pairing');
+    }
+  }, [navigate]);
+
   const handleGeneratePairs = () => {
     const assignments = generatePairs(participants);
     if (assignments === null) {
-      alert(Object.keys(participants).length < 2 
+      alert(Object.keys(participants).length < 2
         ? t('errors.needMoreParticipants')
         : t('errors.invalidPairs')
       );
@@ -105,12 +116,12 @@ export function Home() {
 
   const menuItems = [
     <div className="flex flex-col space-y-2 lg:flex-row lg:space-y-0 lg:space-x-2">
-      <MenuItem key={`vanity`} to="https://bsky.app/profile/mael.dev" icon={<Star className={`text-orange-500`} weight={`fill`}/>}>
+      {/* <MenuItem key={`vanity`} to="https://bsky.app/profile/mael.dev" icon={<Star className={`text-orange-500`} weight={`fill`}/>}>
         {t(`home.vanity`)}
       </MenuItem>
       <MenuItem key={`sponsor`} to="https://github.com/sponsors/arcanis?frequency=one-time&sponsor=arcanis" icon={<Heart className={`text-red-700`} weight={`fill`}/>}>
         {t(`home.sponsor`)}
-      </MenuItem>
+      </MenuItem> */}
     </div>,
   ];
 
@@ -130,7 +141,7 @@ export function Home() {
   return <>
     <PageTransition>
       <Layout menuItems={menuItems}>
-        <div className="lg:flex-[6_6_0%]">
+        <div className="lg:flex-[6_6_0%] lg:mt-auto">
           <PostCard>
             <div className="space-y-4">
               <h1 className="text-xl sm:text-2xl font-bold mb-4 text-red-700">
@@ -140,9 +151,9 @@ export function Home() {
                 <Trans
                   i18nKey="home.explanation"
                   components={{
-                    p: <p/>,
-                    githubLink: <a className="text-blue-500 underline" href="https://github.com/arcanis/secretsanta/" target="_blank"/>,
-                    exampleLink: <Link className="text-blue-500 underline" to="/pairing?from=Simba&to=c1w%2FUV9lXC12U578BHPYZhXxhsK0fPTqoQDU9CA7W581P%2BM%3D"/>,
+                    p: <p />,
+                    githubLink: <a className="text-blue-500 underline" href="https://github.com/arcanis/secretsanta/" target="_blank" />,
+                    exampleLink: <Link className="text-blue-500 underline" to="/pairing?from=Simba&to=c1w%2FUV9lXC12U578BHPYZhXxhsK0fPTqoQDU9CA7W581P%2BM%3D" />,
                   }}
                 />
               </div>
@@ -150,7 +161,7 @@ export function Home() {
           </PostCard>
         </div>
 
-        <div className="lg:order-none lg:flex-[5_5_0%]">
+        <div className="lg:order-none lg:flex-[2_4_25%]">
           <AccordionContainer>
             <Accordion
               title={t('participants.title')}

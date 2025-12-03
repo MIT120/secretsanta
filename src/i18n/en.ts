@@ -22,7 +22,6 @@ export const en = {
     explanation: [
       "Welcome! This tool will help you arrange your holiday gift exchanges. Simply list all participants, and we'll randomly assign pairings according to the rules you set.",
       "You'll receive a unique link for each participant, which you'll have to share yourself (via email, Slack, etc). [<exampleLink>Example link</exampleLink>]",
-      "No accounts, no emails, no hassle, and all hosted on <githubLink>GitHub Pages</githubLink> with no backend!",
     ].map(line => `<p>${line}</p>`).join(''),
     exampleLink: "Example link",
   },
@@ -31,11 +30,12 @@ export const en = {
     assignment: "Welcome, <name/>! You have been picked to get a gift for:",
     loading: "Loading...",
     error: "Failed to decrypt the message. The link might be invalid.",
+    linkAlreadyOpened: "You have already opened a Secret Santa link. For security reasons, you can only view one assignment per browser.",
     startYourOwn: "Start a Secret Santa!"
   },
   participants: {
     title: "Participants",
-    generationWarning: "Important: Any change made to the participant list or settings will require creating new pairings. Existing links won't be retroactively modified.", 
+    generationWarning: "Important: Any change made to the participant list or settings will require creating new pairings. Existing links won't be retroactively modified.",
     addPerson: "Add Person",
     generatePairs: "Generate Pairings",
     enterName: "Enter participant name",
@@ -65,6 +65,7 @@ export const en = {
     resetAssignments: "Regenerate Pairings",
     shareInstructions: "Only share those links with their corresponding gift giver",
     exportCSV: "Export as CSV",
+    printPostCards: "Print PostCards",
     copySecretLink: "Copy Secret Link",
     linkCopied: "Added to clipboard!",
     for: "for"

@@ -2,13 +2,13 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { en } from './en';
-import { fr } from './fr';
+import { bg } from './bg';
 
 export type Translations = typeof en;
 
 const resources = {
-  en: { translation: en },
-  fr: { translation: fr }
+  bg: { translation: bg },
+  en: { translation: en }
 } satisfies Record<string, { translation: Translations }>;
 
 export const SUPPORTED_LANGUAGES = Object.keys(resources);
@@ -18,7 +18,8 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    fallbackLng: 'en',
+    fallbackLng: 'bg',
+    lng: 'bg',
     interpolation: {
       escapeValue: false
     }

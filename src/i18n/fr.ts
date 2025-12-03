@@ -33,6 +33,7 @@ export const fr: Translations = {
     assignment: "Bienvenue, <name/> ! Vous avez été sélectionné(e) pour offrir un cadeau à :",
     loading: "Chargement...",
     error: "Échec du décryptage du message. Le lien pourrait être invalide.",
+    linkAlreadyOpened: "Vous avez déjà ouvert un lien Secret Santa. Pour des raisons de sécurité, vous ne pouvez voir qu'une seule attribution par navigateur.",
     startYourOwn: "Créez Votre Secret Santa !"
   },
   participants: {
@@ -67,6 +68,7 @@ export const fr: Translations = {
     resetAssignments: "Régénérer les Associations",
     shareInstructions: "Partagez chaque lien uniquement avec le donneur correspondant",
     exportCSV: "Exporter en CSV",
+    printPostCards: "Imprimer les Cartes Postales",
     copySecretLink: "Copier le Lien Secret",
     linkCopied: "Lien copié !",
     for: "pour",
