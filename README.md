@@ -26,10 +26,10 @@ docker build -t secretsanta .
 
 2. Run the container:
 ```bash
-docker run -d -p 3000:3000 --name secretsanta-app secretsanta
+docker run -d -p 5173:5173 --name secretsanta-app secretsanta
 ```
 
-The application will be available at `http://localhost:3000`
+The application will be available at `http://localhost:5173`
 
 #### Option 2: Using Docker Compose
 
@@ -58,6 +58,10 @@ docker run -d -p 8080:8080 -e PORT=8080 --name secretsanta-app secretsanta
 
 Or in `docker-compose.yml`, modify the ports and environment sections.
 
+### Note on Dev Server
+
+The Docker setup uses Vite's development server (`yarn dev`) instead of a production build. This provides hot module replacement and faster development cycles. For production deployments, consider using a production build with a static file server instead.
+
 ### Production Deployment
 
 For production, you may want to:
@@ -65,6 +69,10 @@ For production, you may want to:
 - Set up SSL/TLS certificates
 - Configure environment variables
 - Use a container orchestration platform (Kubernetes, Docker Swarm, etc.)
+
+### Note on Base Path
+
+The application is currently configured with `base: '/secretsanta/'` in `vite.config.ts`. If you're deploying to the root path, you'll need to change this to `base: '/'` before building the Docker image.
 
 <br/>
 
