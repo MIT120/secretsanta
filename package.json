@@ -3,7 +3,7 @@
   "private": true,
   "packageManager": "yarn@4.5.1",
   "engines": {
-    "node": ">=18.0.0",
+    "node": "22.x",
     "yarn": "4.5.1"
   },
   "scripts": {
@@ -11,7 +11,7 @@
     "start": "serve -s dist -l $PORT",
     "build": "vite build",
     "preview": "vite preview",
-    "heroku-postbuild": "npm run build"
+    "heroku-postbuild": "yarn build"
   },
   "dependencies": {
     "@fontsource/cherry-swash": "^5.1.0",
